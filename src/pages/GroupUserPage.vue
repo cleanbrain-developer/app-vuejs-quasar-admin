@@ -230,6 +230,14 @@ function _getDefaultUserList() {
       createDate: new Date().toLocaleString(),
       updateDate: new Date().toLocaleString(),
     },
+    {
+      name: '이황',
+      code: 'hlee',
+      loginId: 'hlee',
+      status: '활성',
+      createDate: new Date().toLocaleString(),
+      updateDate: new Date().toLocaleString(),
+    },
   ]
 }
 </script>
