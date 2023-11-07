@@ -74,6 +74,10 @@
               </q-tr>
             </template>
           </q-table>
+          <div>Pinia 테스트</div>
+          <q-btn label="카운트 증가" @click="incrementCount" />
+          <q-btn label="카운트 감소" @click="decrementCount" />
+          {{ count }}
         </template>
         <template v-if="tab === 'user'">
           <q-table
@@ -91,7 +95,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useCounterStore } from 'stores/example-store'
+
+// pinia
+const store = useCounterStore()
+const count = ref(computed(() => store.counter))
+const incrementCount = () => store.increment()
+const decrementCount = () => store.counter--
 
 const filter = ref(),
   filterRef = ref(),
@@ -104,9 +115,6 @@ const groupInformation = _getDefaultGroupInformation()
 
 const userColumnList = _getDefaultUserColumnList(),
   userList = _getDefaultUserList()
-
-const endTree = ref('')
-const startTree = ref('')
 
 watch(selectedNode, (newSelectedNode) => {
   breadCrumbsPathList.value = []

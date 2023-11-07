@@ -1,7 +1,7 @@
 <template>
   <q-header elevated>
     <q-toolbar class="q-pa-none">
-      <q-btn flat href="" stretch>
+      <q-btn to="/" flat stretch>
         <q-avatar rounded size="md">
           <img alt="logo" class="rounded-borders" src="/logo.png" />
         </q-avatar>
