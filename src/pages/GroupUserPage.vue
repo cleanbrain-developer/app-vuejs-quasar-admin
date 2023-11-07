@@ -17,45 +17,56 @@
           <q-tree
             :nodes="tree"
             node-key="label"
-            :selected="selectedNode"
+            v-model:selected="selectedNode"
             :filter="filter"
+            selected-color="primary"
             default-expand-all
-            style="font-size: 14px"
           />
         </div>
       </div>
-      <div class="col-grow q-pa-lg">
-        <q-breadcrumbs gutter="xs" style="font-size: 18px">
-          <q-breadcrumbs-el label="Home" to="/" />
-          <q-breadcrumbs-el label="취상위 부서" />
+      <div v-if="selectedNode" class="col-grow q-pa-lg">
+        <q-breadcrumbs gutter="xs" separator-color="blue">
+          <template v-for="item in breadCrumbsPathList" :key="item.key">
+            <q-breadcrumbs-el :label="item.key" class="text-inherit-weakest" />
+          </template>
         </q-breadcrumbs>
 
         <q-tabs
           v-model="tab"
           dense
-          class="text-grey"
           active-color="primary"
           indicator-color="primary"
           align="justify"
           narrow-indicator
+          class="q-ma-lg bg-inherit-weaker"
         >
-          <q-tab name="group" label="그룹" />
-          <q-tab name="user" label="사용자" />
+          <q-tab
+            name="group"
+            label="그룹"
+            icon="groups"
+            class="bg-inherit text-inherit-weakest"
+          />
+          <q-tab
+            name="user"
+            label="사용자"
+            icon="person"
+            class="bg-inherit text-inherit-weakest"
+          />
         </q-tabs>
 
         <template v-if="tab === 'group'">
           <q-table
-            class="q-ma-md"
+            title="기본 정보"
             :rows="groupInformation"
             row-key="name"
-            flat
             bordered
             hide-header
             hide-bottom
+            class="q-ma-md"
           >
             <template v-slot:body="props">
               <q-tr :props="props">
-                <q-td key="attribute" :props="props" class="bg-grey-4">{{
+                <q-td key="attribute" :props="props">{{
                   props.row.attribute
                 }}</q-td>
                 <q-td key="value" :props="props">{{ props.row.value }}</q-td>
@@ -69,6 +80,7 @@
             :columns="userColumnList"
             :rows="userList"
             row-key="name"
+            bordered
             class="q-ma-md"
           />
         </template>
@@ -78,50 +90,112 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const filter = ref(),
   filterRef = ref(),
   tree = ref(_getDefaultTree()),
-  selectedNode = ref(null),
+  selectedNode = ref(''),
   tab = ref('group')
 
+const breadCrumbsPathList = ref<object[]>([])
 const groupInformation = _getDefaultGroupInformation()
 
 const userColumnList = _getDefaultUserColumnList(),
   userList = _getDefaultUserList()
+
+const endTree = ref('')
+const startTree = ref('')
+
+watch(selectedNode, (newSelectedNode) => {
+  breadCrumbsPathList.value = []
+  breadCrumbsPathList.value.push({ key: tree.value[0].label })
+  searchTree(tree.value[0], newSelectedNode)
+})
 
 function _resetFilter() {
   filter.value = ''
   filterRef.value.focus()
 }
 
+function searchTree(tree, target) {
+  if (tree.label === target) {
+    return tree
+  }
+  for (const child of tree.children) {
+    breadCrumbsPathList.value.push({ key: child.label })
+    const found = searchTree(child, target)
+    if (found) {
+      return found
+    } else {
+      breadCrumbsPathList.value.pop()
+    }
+  }
+}
+
 function _getDefaultTree() {
   return [
     {
-      label: '최상위 부서',
+      label: '최상위 그룹',
+      icon: 'domain',
       children: [
         {
           label: '개발부',
-          children: [{ label: '개발1팀' }, { label: '개발2팀' }],
+          icon: 'groups',
+          children: [
+            {
+              label: '개발1팀',
+              icon: 'groups',
+              children: [],
+            },
+            {
+              label: '개발2팀',
+              icon: 'groups',
+              children: [],
+            },
+          ],
         },
         {
           label: '사업부',
-          children: [{ label: '사업1팀' }, { label: '사업2팀' }],
+          icon: 'groups',
+          children: [
+            {
+              label: '사업1팀',
+              icon: 'groups',
+              children: [],
+            },
+            {
+              label: '사업2팀',
+              icon: 'groups',
+              children: [],
+            },
+          ],
         },
         {
           label: '영업부',
+          icon: 'groups',
           children: [
-            { label: '영업1팀' },
-            { label: '영업2팀' },
-            { label: '영업3팀' },
+            {
+              label: '영업1팀',
+              icon: 'groups',
+              children: [],
+            },
+            {
+              label: '영업2팀',
+              icon: 'groups',
+              children: [],
+            },
+            {
+              label: '영업3팀',
+              icon: 'groups',
+              children: [],
+            },
           ],
         },
       ],
     },
   ]
 }
-
 function _getDefaultGroupInformation() {
   return [
     {

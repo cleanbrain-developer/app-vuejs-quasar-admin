@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <MainHeader />
 
-    <q-page-container>
+    <q-page-container class="bg-inherit">
       <router-view />
     </q-page-container>
 

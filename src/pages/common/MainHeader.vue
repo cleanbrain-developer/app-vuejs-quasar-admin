@@ -13,6 +13,7 @@
         :label="menu.name"
         flat
         stretch
+        class="text-bold"
       >
         <q-list v-bind:key="subMenu.name" v-for="subMenu in menu.subMenuList">
           <q-item
@@ -25,7 +26,7 @@
             target="_self"
           >
             <q-icon :name="subMenu.icon" class="q-pr-xs" size="xs" />
-            <q-item-label>
+            <q-item-label class="text-bold">
               {{ subMenu.name }}
             </q-item-label>
           </q-item>
@@ -81,7 +82,6 @@ const menuList = ref([
 ])
 
 onMounted(() => {
-  console.log($q.dark.isActive)
   darkMode.value = $q.dark.isActive
 })
 
