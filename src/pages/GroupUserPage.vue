@@ -1,7 +1,7 @@
 <template>
   <q-page class="full-height">
-    <div class="row text-h5 text-black text-bold">
-      <div class="col-4 q-gutter-lg">
+    <div class="row text-h5 text-black text-bold" style="min-height: inherit">
+      <div class="col-4 q-gutter-lg" style="min-height: inherit">
         <div class="q-pa-lg">
           <q-input ref="filterRef" filled v-model="filter" label="Filter">
             <template v-slot:append>
@@ -20,6 +20,7 @@
             v-model:selected="selectedNode"
             :filter="filter"
             selected-color="primary"
+            dense
             default-expand-all
           />
         </div>
